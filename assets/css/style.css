@@ -1,0 +1,51 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+
+html{   
+    font-family: 'Inconsolata', monospace;
+}
+
+body{
+    background-image: url("../img/bg_1.jpg");
+    font-family: 'Inconsolata', monospace;
+}
+
+main{
+    padding: 20px;
+    background-color:  rgb(223, 222, 222);
+    border: solid rgb(149, 149, 149) 1px;
+    border-radius: 1px;
+}
+
+h1{
+    /*color: rgb(187, 10, 48); audirot */
+    color: rgb(7, 7, 7);
+     font-style: normal;
+     font-variant: normal;
+     font-weight: 700;
+     line-height: 26.4px;
+}
+
+h2{
+    color: rgb(59, 59, 59);
+}
+
+div.container > hr.titleseparator {
+    border: 2px solid rgb(68, 68, 68);
+    border-radius: 1px;
+    max-width: 100% ; 
+}
+
+.tab-pane{
+    font-family: 'Inconsolata', monospace !important;
+    background-color: #fff;
+    padding: 15px ;
+}
+
+hr.bodyelementseparator{
+    border: 1px solid rgb(107, 107, 107) !important;
+    border-radius: 0.5px;
+    max-width: 100% ; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
