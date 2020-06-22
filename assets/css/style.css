@@ -49,3 +49,14 @@ hr.bodyelementseparator{
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+a{
+    color: rgb(80, 80, 80);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+a:hover{
+    color: rgb(49, 49, 49);
+    font-weight: 900;
+}
