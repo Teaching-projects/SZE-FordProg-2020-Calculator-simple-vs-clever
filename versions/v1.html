@@ -33,11 +33,12 @@
         <div class="container">
             
             <h2>Simple solution</h2>
+            <p>The source code is available under <a href="../codes/v1/simple/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-maincpp-tab" data-toggle="tab" href="#nav-maincpp" role="tab" aria-controls="nav-maincpp" aria-selected="true">main.cpp</a>
                     <a class="nav-item nav-link" id="nav-Tokenizerh-tab" data-toggle="tab" href="#nav-Tokenizerh" role="tab" aria-controls="nav-Tokenizerh" aria-selected="false">Tokenizer.h</a>
-                    <a class="nav-item nav-link" id="nav-Tokeinzercpp-tab" data-toggle="tab" href="#nav-Tokeinzercpp" role="tab" aria-controls="nav-Tokeinzercpp" aria-selected="false">Tokeinzer.cpp</a>
+                    <a class="nav-item nav-link" id="nav-Tokenizercpp-tab" data-toggle="tab" href="#nav-Tokenizercpp" role="tab" aria-controls="nav-Tokenizercpp" aria-selected="false">Tokenizer.cpp</a>
                     <a class="nav-item nav-link" id="nav-Makefile-tab" data-toggle="tab" href="#nav-Makefile" role="tab" aria-controls="nav-Makefile" aria-selected="false">Makefile</a>
                 </div>
             </nav>
@@ -72,7 +73,48 @@
     }
                     </code></pre>
                 </div>
+
                 <div class="tab-pane fade" id="nav-Tokenizerh" role="tabpanel" aria-labelledby="nav-Tokenizerh-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #ifndef TOKENIZER_H
+    #define TOKENIZER_H
+
+    #include &lt;iostream&gt;
+    #include &lt;cctype&gt;
+    #include &lt;map&gt;
+    #include &lt;string&gt;
+
+    using namespace std;
+
+    enum TokenType{
+        Const,
+        Operat,
+        Openp,
+        Closep
+    };
+
+    struct Token{
+        string value;
+        TokenType type;
+    };
+
+    class Tokenizer
+    {
+        public:
+            Tokenizer(const string &input);
+            bool getNext(Token &token);
+        private:
+            string input_;
+            string::iterator current_;
+            void skipWhitespace();
+    };
+
+    #endif // TOKENIZER_H
+
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-Tokenizercpp" role="tabpanel" aria-labelledby="nav-Tokenizercpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
     #include "Tokenizer.h"
 
@@ -105,7 +147,7 @@
             token.type = Closep;
             ++current_;
         }
-        else if(*current_ == '+' || *current_ == '-' || *current_ == '*' || *current_ == '/' || *current_ == '^')
+        else if(*current_ == '+' || *current_ == '-' || *current_ == '*' || *current_ == '/')
         {
             token.type = Operat;
             token.value.push_back(*current_);
@@ -120,61 +162,14 @@
                 ++current_;
             }
         }
-        else if(isalpha(*current_))
-        {
-            token.type = Var;
-            while(current_ != input_.end() && isalpha(*current_))
-            {
-                token.value.push_back(*current_);
-            ++current_;
-            }
-        }
+
         skipWhitespace();
         return true;
     }
                         
                     </code></pre>
                 </div>
-                <div class="tab-pane fade" id="nav-Tokeinzercpp" role="tabpanel" aria-labelledby="nav-Tokeinzercpp-tab">
-                    <pre  class="border border-2 border-dark p-2"><code>
-    #ifndef TOKENIZER_H
-    #define TOKENIZER_H
-
-    #include &lt;iostream&gt;
-    #include &lt;cctype&gt;
-    #include &lt;map&gt;
-    #include &lt;string&gt;
-
-    using namespace std;
-
-    enum TokenType{
-        Const,
-        Operat,
-        Openp,
-        Closep,
-        Var
-    };
-
-    struct Token{
-        string value;
-        TokenType type;
-    };
-
-    class Tokenizer
-    {
-        public:
-            Tokenizer(const string &input);
-            bool getNext(Token &token);
-        private:
-            string input_;
-            string::iterator current_;
-            void skipWhitespace();
-    };
-
-    #endif // TOKENIZER_H
-
-                    </code></pre>
-                </div>
+                
                 <div class="tab-pane fade" id="nav-Makefile" role="tabpanel" aria-labelledby="nav-Makefile-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
     calc: *.cpp *.h
@@ -190,6 +185,7 @@
         <div class="container">
             
             <h2>Smart solution</h2>
+            <p>The source code is available under <a href="../codes/v1/smart/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-smartfile1-tab" data-toggle="tab" href="#nav-smartfile1" role="tab" aria-controls="nav-smartfile1" aria-selected="true">smartFile1</a>

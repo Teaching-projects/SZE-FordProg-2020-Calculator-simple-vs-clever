@@ -20,7 +20,7 @@
                 <div class="col">
                     <h1>Peter Koncz</h1>
                     <h2>Simple vs Smart calculator</h2>
-                    <h3>simple '+' and '-' operations</h3>
+                    <h3>Postfix evaluation +, -, *, /</h3>
                 </div>
 
             </div>
@@ -33,17 +33,388 @@
         <div class="container">
             
             <h2>Simple solution</h2>
+            <p>The source code is available under <a href="../codes/v2/simple/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-simplefile1-tab" data-toggle="tab" href="#nav-simplefile1" role="tab" aria-controls="nav-simplefile1" aria-selected="true">simpleFile1</a>
-                    <a class="nav-item nav-link" id="nav-simplefile2-tab" data-toggle="tab" href="#nav-simplefile2" role="tab" aria-controls="nav-simplefile2" aria-selected="false">simpleFile2</a>
-                    <a class="nav-item nav-link" id="nav-simplefile3-tab" data-toggle="tab" href="#nav-simplefile3" role="tab" aria-controls="nav-simplefile3" aria-selected="false">simplefile3</a>
+                    <a class="nav-item nav-link active" id="nav-maincpp-tab" data-toggle="tab" href="#nav-maincpp" role="tab" aria-controls="nav-maincpp" aria-selected="true">main.cpp</a>
+
+                    <a class="nav-item nav-link" id="nav-Tokenizerh-tab" data-toggle="tab" href="#nav-Tokenizerh" role="tab" aria-controls="nav-Tokenizerh" aria-selected="false">Tokenizer.h</a>
+                    <a class="nav-item nav-link" id="nav-Tokenizercpp-tab" data-toggle="tab" href="#nav-Tokenizercpp" role="tab" aria-controls="nav-Tokenizercpp" aria-selected="false">Tokenizer.cpp</a>
+                    
+                    <a class="nav-item nav-link" id="nav-Expressionh-tab" data-toggle="tab" href="#nav-Expressionh" role="tab" aria-controls="nav-Expressionh" aria-selected="false">Expression.h</a>
+                    <a class="nav-item nav-link" id="nav-Expressioncpp-tab" data-toggle="tab" href="#nav-Expressioncpp" role="tab" aria-controls="nav-Expressioncpp" aria-selected="false">Expression.cpp</a>
+                    
+                    <a class="nav-item nav-link" id="nav-Constanth-tab" data-toggle="tab" href="#nav-Constanth" role="tab" aria-controls="nav-Constanth" aria-selected="false">Constant.h</a>
+                    <a class="nav-item nav-link" id="nav-Constantcpp-tab" data-toggle="tab" href="#nav-Constantcpp" role="tab" aria-controls="nav-Constantcpp" aria-selected="false">Constant.cpp</a>
+                    
+                    <a class="nav-item nav-link" id="nav-Operatorh-tab" data-toggle="tab" href="#nav-Operatorh" role="tab" aria-controls="nav-Operatorh" aria-selected="false">Operator.h</a>
+                    <a class="nav-item nav-link" id="nav-Operatorcpp-tab" data-toggle="tab" href="#nav-Operatorcpp" role="tab" aria-controls="nav-Operatorcpp" aria-selected="false">Operator.cpp</a>
+
+                    <a class="nav-item nav-link" id="nav-Makefile-tab" data-toggle="tab" href="#nav-Makefile" role="tab" aria-controls="nav-Makefile" aria-selected="false">Makefile</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-simplefile1" role="tabpanel" aria-labelledby="nav-simplefile1-tab">asd1</div>
-                <div class="tab-pane fade" id="nav-simplefile2" role="tabpanel" aria-labelledby="nav-simplefile2-tab">asd2</div>
-                <div class="tab-pane fade" id="nav-simplefile3" role="tabpanel" aria-labelledby="nav-simplefile3-tab">asd3</div>
+
+                <div class="tab-pane fade show active" id="nav-maincpp" role="tabpanel" aria-labelledby="nav-maincpp-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+    #include &lt;iostream&gt;
+    #include &lt;cctype&gt;
+    #include &lt;map&gt;
+    #include &lt;string&gt;
+    #include &lt;stdexcept&gt;
+    #include &lt;vector&gt;
+    #include &lt;stack&gt;
+
+    #include "Tokenizer.h"
+    #include "Expression.h"
+    #include "Constant.h"
+    #include "Operator.h"
+
+    using namespace std;
+
+    int precedence(const Token &t)
+    {
+        if(t.value == "+" || t.value == "-") return 1;
+        if(t.value == "*" || t.value == "/") return 2;
+    }
+
+    vector&lt;Token&gt; postfixExpr(const string &input)
+    {
+        Tokenizer tz(input);
+        Token t;
+        stack&lt;Token&gt; s;
+        vector&lt;Token&gt; result;
+        while(tz.getNext(t))
+        {
+            if(t.type == Operat)
+            {
+            while(not s.empty() && precedence(s.top()) >= precedence(t))
+            {
+                result.push_back(s.top());
+                s.pop();
+            }
+            s.push(t);
+            }
+            else if(t.type == Openp)
+            {
+                s.push(t);
+            }
+            else if(t.type == Closep)
+            {
+            while(not s.empty() && s.top().type != Openp)
+            {
+                result.push_back(s.top());
+                s.pop();
+            }
+            s.pop();
+            }
+            else
+            {
+                result.push_back(t);
+            }
+        }
+        while(not s.empty())
+        {
+            result.push_back(s.top());
+            s.pop();
+        }
+        return result;
+    }
+
+    int main()
+    {
+
+        Constant *c = new Constant(2.0);
+        Constant *c2 = new Constant(5.0);
+
+        Expression *root = new Operator("*", c, c2);
+        
+        cout &lt;&lt; root->to_string() &lt;&lt; endl;
+        cout &lt;&lt; "=" &lt;&lt; root->eval() &lt;&lt; endl;
+
+        cout &lt;&lt; "-------" &lt;&lt; endl;
+        return 0;
+    }
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-Tokenizerh" role="tabpanel" aria-labelledby="nav-Tokenizerh-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #ifndef TOKENIZER_H
+    #define TOKENIZER_H
+    
+    #include &lt;iostream&gt;
+    #include &lt;cctype&gt;
+    #include &lt;map&gt;
+    #include &lt;string&gt;
+    
+    using namespace std;
+    
+    enum TokenType{
+        Const,
+        Operat,
+        Openp,
+        Closep,
+    };
+    
+    struct Token{
+        string value;
+        TokenType type;
+    };
+    
+    class Tokenizer
+    {
+        public:
+            Tokenizer(const string &input);
+            bool getNext(Token &token);
+        private:
+            string input_;
+            string::iterator current_;
+            void skipWhitespace();
+    };
+    
+    #endif // TOKENIZER_H
+    
+                    </code></pre>                
+                </div>
+
+                <div class="tab-pane fade" id="nav-Tokenizercpp" role="tabpanel" aria-labelledby="nav-Tokenizercpp-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+    #include "Tokenizer.h"
+
+    void Tokenizer::skipWhitespace()
+    {
+        while(current_ != input_.end() && isspace(*current_))
+        {
+            ++current_;
+        }
+    
+    }
+    
+    Tokenizer::Tokenizer(const string &input):input_(input), current_(input_.begin())
+    {
+        skipWhitespace();
+    }
+    
+    bool Tokenizer::getNext(Token &token)
+    {
+        token.value.clear();
+        if(current_ == input_.end()) return false;
+    
+        if(*current_ == '+' || *current_ == '-' || *current_ == '*' || *current_ == '/' )
+        {
+            token.type = Operat;
+            token.value.push_back(*current_);
+            ++current_;
+        }
+        else if(isdigit(*current_))
+        {
+            token.type = Const;
+            while(current_ != input_.end() && isdigit(*current_))
+            {
+                token.value.push_back(*current_);
+                ++current_;
+            }
+        }
+        skipWhitespace();
+        return true;
+    }
+                    </code></pre>
+    
+                </div>
+
+                <div class="tab-pane fade" id="nav-Expressionh" role="tabpanel" aria-labelledby="nav-Expressionh-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+    #ifndef EXPRESSION_H
+    #define EXPRESSION_H
+
+    #include "Tokenizer.h"
+
+    using namespace std;
+
+    class Expression
+    {
+        public:
+            virtual double eval() = 0;
+            virtual ~Expression(){}
+            virtual string to_string() = 0;
+            virtual int precedence()=0;
+    };
+
+    #endif // EXPRESSION_H
+
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-Expressioncpp" role="tabpanel" aria-labelledby="nav-Expressioncpp-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #include "Expression.h"
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-Constanth" role="tabpanel" aria-labelledby="nav-Constanth-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+    #ifndef CONSTANT_H
+    #define CONSTANT_H
+    
+    #include &lt;iostream&gt;
+    #include &lt;string&gt;
+    #include &lt;map&gt;
+    
+    #include "Expression.h"
+    
+    using namespace std;
+    
+    class Constant: public Expression
+    {
+        public:
+            Constant(double value);
+    
+            virtual double eval();
+            virtual string to_string();
+            virtual int precedence();
+        private:
+            double value_;
+    };
+    
+    
+    
+    #endif // CONSTANT_H
+
+    
+</code></pre>
+                    
+                </div>
+
+                <div class="tab-pane fade" id="nav-Constantcpp" role="tabpanel" aria-labelledby="nav-Constantcpp-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #include "Constant.h"
+    #include &lt;sstream&gt;
+
+
+    Constant::Constant(double value): value_(value){}
+
+    double Constant::eval()
+    {
+        return value_;
+    }
+
+    int Constant::precedence()
+    {
+        return 55;
+    }
+
+    string Constant::to_string()
+    {
+        stringstream s;
+        s &lt;&lt; value_;
+        return s.str();
+    }
+
+</code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-Operatorh" role="tabpanel" aria-labelledby="nav-Operatorh-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #ifndef OPERATOR_H
+    #define OPERATOR_H
+    
+    #include &lt;iostream&gt;
+    #include &lt;string&gt;
+    #include &lt;map&gt;
+    
+    #include "Expression.h"
+    
+    using namespace std;
+    
+    class Operator: public Expression
+    {
+        public:
+            Operator(const string & name,
+                    Expression *left,
+                    Expression *right);
+            virtual ~Operator();
+            virtual double eval();
+            virtual string to_string();
+        
+        private:
+            string name_;
+        Expression *left_;
+        Expression *right_;
+    };
+    
+    
+    
+    #endif // OPERATOR_H
+    
+                    </code></pre>
+    
+                </div>
+
+                <div class="tab-pane fade" id="nav-Operatorcpp" role="tabpanel" aria-labelledby="nav-Operatorcpp-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #include "Operator.h"
+    #include &lt;sstream&gt;
+    #include &lt;cmath&gt;
+
+    Operator::Operator(const string & name,
+                        Expression *left,
+                        Expression *right): name_(name), left_(left), right_(right) {}
+
+    double Operator::eval()
+    {
+        if(name_ == "+")
+        {
+            return left_->eval() + right_->eval();
+        }
+        else if(name_ == "-")
+        {
+            return left_->eval() - right_->eval();
+        }
+        else if(name_ == "*")
+        {
+            return left_->eval() * right_->eval();
+        }
+        else if(name_ == "/")
+        {
+            return left_->eval() / right_->eval();
+        }
+
+    }
+
+    string Operator::to_string()
+    {
+        stringstream s;
+
+        s &lt;&lt; left_ ->to_string() &lt;&lt; name_ &lt;&lt; right_->to_string();
+
+        return s.str();
+    }
+
+    Operator::~Operator()
+    {
+        delete left_;
+        delete right_;
+    }
+
+    
+</code></pre>
+
+                </div>
+
+                <div class="tab-pane fade" id="nav-Makefile" role="tabpanel" aria-labelledby="nav-Makefile-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+    calc: *.cpp *.h
+    g++ -std=c++11 *.cpp -o calc
+                    
+                    </code></pre>
+
+                </div>
             </div>
             
             <hr class="bodyelementseparator">
@@ -53,6 +424,7 @@
         <div class="container">
             
             <h2>Smart solution</h2>
+            <p>The source code is available under <a href="../codes/v2/smart/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-smartfile1-tab" data-toggle="tab" href="#nav-smartfile1" role="tab" aria-controls="nav-smartfile1" aria-selected="true">smartFile1</a>
@@ -61,9 +433,25 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-smartfile1" role="tabpanel" aria-labelledby="nav-smartfile1-tab">asd1</div>
-                <div class="tab-pane fade" id="nav-smartfile2" role="tabpanel" aria-labelledby="nav-smartfile2-tab">asd2</div>
-                <div class="tab-pane fade" id="nav-smartfile3" role="tabpanel" aria-labelledby="nav-smartfile3-tab">asd3</div>
+                
+                <div class="tab-pane fade show active" id="nav-smartfile1" role="tabpanel" aria-labelledby="nav-smartfile1-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-smartfile2" role="tabpanel" aria-labelledby="nav-smartfile2-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+                        
+                    </code></pre>
+                </div>
+
+                <div class="tab-pane fade" id="nav-smartfile3" role="tabpanel" aria-labelledby="nav-smartfile3-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+                        
+                    </code></pre>
+                </div>
+
             </div>
             
             <hr class="bodyelementseparator">
