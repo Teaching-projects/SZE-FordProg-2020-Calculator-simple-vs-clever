@@ -16,7 +16,6 @@ class Constant: public Expression
 
         virtual double eval();
         virtual string to_string();
-        virtual int precedence();
   private:
 		double value_;
 };

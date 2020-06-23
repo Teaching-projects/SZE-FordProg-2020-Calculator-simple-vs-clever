@@ -11,7 +11,6 @@ class Expression
         virtual double eval() = 0;
         virtual ~Expression(){}
         virtual string to_string() = 0;
-        virtual int precedence()=0;
 };
 
 #endif // EXPRESSION_H

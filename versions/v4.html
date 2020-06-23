@@ -54,38 +54,179 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
+
                 <div class="tab-pane fade show active" id="nav-maincpp" role="tabpanel" aria-labelledby="nav-maincpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
+        #include &lt;iostream&gt;
+        #include &lt;cctype&gt;
+        #include &lt;map&gt;
+        #include &lt;string&gt;
+        #include &lt;stdexcept&gt;
+        #include &lt;vector&gt;
+        #include &lt;stack&gt;
+        #include &lt;cstdlib&gt;
+        
+        #include "Tokenizer.h"
+        #include "Expression.h"
+        #include "Constant.h"
+        #include "Operator.h"
+        
+        
+        using namespace std;
+        
+        int precedence(const Token &t)
+        {
+            if(t.value == "+" || t.value == "-") return 1;
+            if(t.value == "*" || t.value == "/") return 2;
+            if(t.value == "^" ) return 3;
+        }
+        
+        vector&lt;Token&gt; postfixExpr(const string &input)
+        {
+            Tokenizer tz(input);
+            Token t;
+            stack&lt;Token&gt; s;
+            vector&lt;Token&gt; result;
+            while(tz.getNext(t))
+            {
+                if(t.type == Operat)
+                {
+                    while(not s.empty() && precedence(s.top()) >= precedence(t))
+                    {
+                        result.push_back(s.top());
+                        s.pop();
+                    }
+                    s.push(t);
+                }
+                else if(t.type == Openp)
+                {
+                    s.push(t);
+                }
+                else if(t.type == Closep)
+                {
+                    while(not s.empty() && s.top().type != Openp)
+                    {
+                        result.push_back(s.top());
+                        s.pop();
+                    }
+                    s.pop();
+                }
+                else
+                {
+                    result.push_back(t);
+                }
+            }
+            while(not s.empty())
+            {
+                result.push_back(s.top());
+                s.pop();
+            }
+            return result;
+        }
+        
+        void inputpostfixevaluator(string inp){
+        
+            vector&lt;Token&gt; postfix = postfixExpr(inp);
+            stack<Expression*> s;
+        
+            for(vector&lt;Token>:&gt;iterator i = postfix.begin(); i != postfix.end(); ++i)
+            {
+                if(i->type == Operat)
+                {
+                Expression *right = s.top();
+                s.pop();
+                Expression *left = s.top();
+                s.pop();
+                s.push(new Operator(i->value, left, right));
+                }
+                else if(i->type == Const)
+                {
+                    s.push(new Constant(strtod(i->value.c_str(), NULL)));
+                }
+            }
+            Expression *root = s.top();
+        
+            //    variables["x"] = 12345.0;
+            cout << root->to_string() << '=' << root->eval() << endl << endl;
+            delete root;
+        }
+        
+        
+        int main()
+        {
+            string inp;
+            string inp2;
+        
+            while(true)
+            {
+                cout << "Adj meg egy meg kifejezest!"<< endl ;
+                //cin >> inp;
+        
+                getline (cin,inp);
+                if(inp.empty()){break;}
+                inputpostfixevaluator(inp);
+        
+                cout << "Szeretnel tovabbi kifejezest megadni? (y/n)"<< endl ;
+                //cin >> inp2;
+                getline (cin,inp2);
+        
+                if(inp2.compare("y")!=0){
+                    return 0;
+                }
+        
+            }  
+        
+            return 0;
+        }
+                            
+                    </code></pre>
+                </div>
+                
+                <div class="tab-pane fade" id="nav-Tokenizerh" role="tabpanel" aria-labelledby="nav-Tokenizerh-tab">
+                    <pre  class="border border-2 border-dark p-2"><code>
+    #ifndef TOKENIZER_H
+    #define TOKENIZER_H
+    
     #include &lt;iostream&gt;
     #include &lt;cctype&gt;
     #include &lt;map&gt;
     #include &lt;string&gt;
-    #include &lt;stdexcept&gt;
-    #include &lt;stack&gt;
-    #include &lt;cstdlib&gt;
-
-    #include "Tokenizer.h"
-
+    
     using namespace std;
-
-
-    int main()
+    
+    enum TokenType{
+        Const,
+        Operat,
+        Openp,
+        Closep,
+        Var
+    };
+    
+    struct Token{
+        string value;
+        TokenType type;
+    };
+    
+    class Tokenizer
     {
-
-        Tokenizer tz("(2+3)");
-        Token t;
-        while(tz.getNext(t))
-        {
-            cout << t.value<< endl;
-        }
-
-        cout << "exit" << endl;
-        return 0;
-    }
+        public:
+            Tokenizer(const string &input);
+            bool getNext(Token &token);
+        private:
+            string input_;
+            string::iterator current_;
+            void skipWhitespace();
+    };
+    
+    #endif // TOKENIZER_H
+                        
+                        
                     </code></pre>
                 </div>
-                <div class="tab-pane fade" id="nav-Tokenizerh" role="tabpanel" aria-labelledby="nav-Tokenizerh-tab">
+
+                <div class="tab-pane fade" id="nav-Tokenizercpp" role="tabpanel" aria-labelledby="nav-Tokenizercpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
+
     #include "Tokenizer.h"
 
     void Tokenizer::skipWhitespace()
@@ -132,103 +273,228 @@
                 ++current_;
             }
         }
-        else if(isalpha(*current_))
-        {
-            token.type = Var;
-            while(current_ != input_.end() && isalpha(*current_))
-            {
-                token.value.push_back(*current_);
-            ++current_;
-            }
-        }
         skipWhitespace();
         return true;
     }
                         
-                    </code></pre>
-                </div>
-                <div class="tab-pane fade" id="nav-Tokenizercpp" role="tabpanel" aria-labelledby="nav-Tokenizercpp-tab">
-                    <pre  class="border border-2 border-dark p-2"><code>
-    #ifndef TOKENIZER_H
-    #define TOKENIZER_H
-
-    #include &lt;iostream&gt;
-    #include &lt;cctype&gt;
-    #include &lt;map&gt;
-    #include &lt;string&gt;
-
-    using namespace std;
-
-    enum TokenType{
-        Const,
-        Operat,
-        Openp,
-        Closep,
-        Var
-    };
-
-    struct Token{
-        string value;
-        TokenType type;
-    };
-
-    class Tokenizer
-    {
-        public:
-            Tokenizer(const string &input);
-            bool getNext(Token &token);
-        private:
-            string input_;
-            string::iterator current_;
-            void skipWhitespace();
-    };
-
-    #endif // TOKENIZER_H
 
                     </code></pre>
                 </div>
                 
                 <div class="tab-pane fade" id="nav-Constanth" role="tabpanel" aria-labelledby="nav-Constanth-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Constanth
+
+    #ifndef CONSTANT_H
+    #define CONSTANT_H
+
+    #include &lt;iostream&gt;
+    #include &lt;string&gt;
+    #include &lt;map&gt;
+
+    #include "Expression.h"
+
+    using namespace std;
+
+    class Constant: public Expression
+    {
+        public:
+            Constant(double value);
+
+            virtual double eval();
+            virtual string to_string();
+            virtual int precedence();
+        private:
+            double value_;
+    };
+
+
+
+    #endif // CONSTANT_H
+
                     </code></pre>
                 </div>
                 
                 <div class="tab-pane fade" id="nav-Constantcpp" role="tabpanel" aria-labelledby="nav-Constantcpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Constantcpp
+
+    #include "Constant.h"
+    #include &lt;sstream&gt;
+
+
+    Constant::Constant(double value): value_(value){}
+
+    double Constant::eval()
+    {
+        return value_;
+    }
+
+    int Constant::precedence()
+    {
+        return 55;
+    }
+
+    string Constant::to_string()
+    {
+        stringstream s;
+        s<<value_;
+        return s.str();
+    }
+
                     </code></pre>
                 </div>
                 
                 
                 <div class="tab-pane fade" id="nav-Expressionh" role="tabpanel" aria-labelledby="nav-Expressionh-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Expressionh
+
+    #ifndef EXPRESSION_H
+    #define EXPRESSION_H
+    
+    #include "Tokenizer.h"
+    
+    using namespace std;
+    
+    class Expression
+    {
+        public:
+            virtual double eval() = 0;
+            virtual ~Expression(){}
+            virtual string to_string() = 0;
+            virtual int precedence()=0;
+    };
+    
+    #endif // EXPRESSION_H
+                        
                     </code></pre>
                 </div>
                 
                 <div class="tab-pane fade" id="nav-Expressioncpp" role="tabpanel" aria-labelledby="nav-Expressioncpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Expressioncpp
+
+    #include "Expression.h"
+
                     </code></pre>
                 </div>
                 
                 <div class="tab-pane fade" id="nav-Operatorh" role="tabpanel" aria-labelledby="nav-Operatorh-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Operatorh
+
+    #ifndef OPERATOR_H
+    #define OPERATOR_H
+    
+    #include &lt;iostream&gt;
+    #include &lt;string&gt;
+    #include &lt;map&gt;
+    
+    #include "Expression.h"
+    
+    using namespace std;
+    
+    class Operator: public Expression
+    {
+        public:
+            Operator(const string & name,
+                    Expression *left,
+                    Expression *right);
+            virtual ~Operator();
+            virtual double eval();
+            virtual string to_string();
+            virtual int precedence();
+        private:
+            string name_;
+            Expression *left_;
+            Expression *right_;
+    };
+    
+    
+    
+    #endif // OPERATOR_H
+    
                     </code></pre>
                 </div>
                 
                 <div class="tab-pane fade" id="nav-Operatorcpp" role="tabpanel" aria-labelledby="nav-Operatorcpp-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
-                        Operatorcpp
+
+    #include "Operator.h"
+    #include &lt;sstream&gt;
+    #include &lt;cmath&gt;
+
+    Operator::Operator(const string & name,
+                        Expression *left,
+                        Expression *right): name_(name), left_(left), right_(right) {}
+
+    double Operator::eval()
+    {
+        if(name_ == "+")
+        {
+            return left_->eval() + right_->eval();
+        }
+        else if(name_ == "-")
+        {
+            return left_->eval() - right_->eval();
+        }
+        else if(name_ == "*")
+        {
+            return left_->eval() * right_->eval();
+        }
+        else if(name_ == "/")
+        {
+            return left_->eval() / right_->eval();
+        }
+        else if(name_ == "^")
+        {
+            return pow(left_->eval(), right_->eval());
+        }
+
+    }
+
+    int Operator::precedence()
+    {
+        if(name_ == "+" || name_ == "-") return 1;
+        if(name_ == "*" || name_ == "/") return 2;
+        if(name_ == "^") return 3;
+    }
+
+    string Operator::to_string()
+    {
+        stringstream s;
+        if(left_->precedence() < precedence())
+        {
+            s << '(' << left_->to_string() << ')';
+        }
+        else
+        {
+            s << left_->to_string();
+        }
+
+        s << name_ ;
+
+        if(right_->precedence() < precedence())
+        {
+            s << '(' << right_->to_string() << ')';
+        }
+        else
+        {
+            s << right_->to_string();
+        }
+
+        return s.str();
+    }
+
+    Operator::~Operator()
+    {
+        delete left_;
+        delete right_;
+    }
+
                     </code></pre>
                 </div>
 
                 <div class="tab-pane fade" id="nav-Makefile" role="tabpanel" aria-labelledby="nav-Makefile-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
     calc: *.cpp *.h
-        g++ -std=c++11 *.cpp -o calc
+    g++ -std=c++11 *.cpp -o calc
                     </code></pre>
                 </div>
                 

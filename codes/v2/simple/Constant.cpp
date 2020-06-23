@@ -9,11 +9,6 @@ double Constant::eval()
     return value_;
 }
 
-int Constant::precedence()
-{
-    return 55;
-}
-
 string Constant::to_string()
 {
     stringstream s;
