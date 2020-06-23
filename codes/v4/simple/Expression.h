@@ -8,7 +8,7 @@ using namespace std;
 class Expression
 {
     public:
-        virtual double eval(const map<string, double> &variables) = 0;
+        virtual double eval() = 0;
         virtual ~Expression(){}
         virtual string to_string() = 0;
         virtual int precedence()=0;

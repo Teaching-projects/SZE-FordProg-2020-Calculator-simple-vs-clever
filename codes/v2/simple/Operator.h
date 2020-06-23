@@ -16,9 +16,8 @@ class Operator: public Expression
              Expression *left,
              Expression *right);
       virtual ~Operator();
-      virtual double eval(const map<string, double> &variables);
+      virtual double eval();
       virtual string to_string();
-      virtual int precedence();
     
   private:
 		string name_;

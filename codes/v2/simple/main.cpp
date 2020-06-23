@@ -76,13 +76,9 @@ int main()
     Constant *c2 = new Constant(5.0);
 
     Expression *root = new Operator("*", c, c2);
-
-    //asd
-    map<string, double> variables;
-    variables["x"] = 3.0;
     
     cout << root->to_string() << endl;
-    cout << "=" << root->eval(variables) << endl;
+    cout << "=" << root->eval() << endl;
 
 	cout << "-------" << endl;
     return 0;

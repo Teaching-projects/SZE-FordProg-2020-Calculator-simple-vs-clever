@@ -19,17 +19,7 @@ bool Tokenizer::getNext(Token &token)
     token.value.clear();
 	if(current_ == input_.end()) return false;
 
-    if(*current_ =='(')
-    {
-    	token.type = Openp;
-        ++current_;
-    }
-    else if(*current_ == ')')
-    {
-    	token.type = Closep;
-        ++current_;
-    }
-    else if(*current_ == '+' || *current_ == '-' || *current_ == '*' || *current_ == '/' || *current_ == '^')
+    if(*current_ == '+' || *current_ == '-' || *current_ == '*' || *current_ == '/' )
     {
     	token.type = Operat;
         token.value.push_back(*current_);

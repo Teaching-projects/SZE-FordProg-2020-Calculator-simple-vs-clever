@@ -12,7 +12,8 @@ enum TokenType{
     Const,
     Operat,
     Openp,
-    Closep
+    Closep,
+    Var
 };
 
 struct Token{

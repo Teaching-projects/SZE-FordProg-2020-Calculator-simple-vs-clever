@@ -4,7 +4,7 @@
 
 Constant::Constant(double value): value_(value){}
 
-double Constant::eval(const map<string, double> &variables)
+double Constant::eval()
 {
     return value_;
 }

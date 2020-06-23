@@ -7,8 +7,4 @@ The program creates an expression tree from a mathematical operation and solve i
 $ make
 $ ./calc
 
-Adj meg egy meg kifejezest!
-3+4*(6+6)
-3+4*(6+6)=51
-
 ```

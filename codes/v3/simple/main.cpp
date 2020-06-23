@@ -19,7 +19,6 @@ int precedence(const Token &t)
 {
     if(t.value == "+" || t.value == "-") return 1;
     if(t.value == "*" || t.value == "/") return 2;
-    if(t.value == "^" ) return 3;
 }
 
 vector<Token> postfixExpr(const string &input)
@@ -92,23 +91,21 @@ void inputpostfixevaluator(string inp){
     delete root;
 }
 
-
 int main()
 {
     string inp;
     string inp2;
+ 
 
     while(true)
     {
         cout << "Adj meg egy meg kifejezest!"<< endl ;
-        //cin >> inp;
-
         getline (cin,inp);
+
         if(inp.empty()){break;}
         inputpostfixevaluator(inp);
 
         cout << "Szeretnel tovabbi kifejezest megadni? (y/n)"<< endl ;
-        //cin >> inp2;
         getline (cin,inp2);
 
         if(inp2.compare("y")!=0){
@@ -116,22 +113,6 @@ int main()
         }
 
     }
-
-//    vector<Token> postfix = postfixExpr("2^3+(2+3)*4+5");
-
-//    for(vector<Token>::iterator i = postfix.begin(); i != postfix.end(); ++i)
-//    {
-//        cout << i->value ;
-//    }
-
-    //----------------
-//    cout << endl;
-//    for(vector<Token>::iterator i = postfix.begin(); i != postfix.end(); ++i)
-//    {
-//        cout << i->type ;
-//    }
-    //-----------------
-
 
 
     return 0;

@@ -44,15 +44,6 @@ bool Tokenizer::getNext(Token &token)
             ++current_;
         }
     }
-    else if(isalpha(*current_))
-    {
-      token.type = Var;
-      while(current_ != input_.end() && isalpha(*current_))
-      {
-      	token.value.push_back(*current_);
-        ++current_;
-      }
-    }
     skipWhitespace();
     return true;
 }

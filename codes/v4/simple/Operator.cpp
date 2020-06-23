@@ -6,27 +6,27 @@ Operator::Operator(const string & name,
                     Expression *left,
                     Expression *right): name_(name), left_(left), right_(right) {}
 
-double Operator::eval(const map<string, double> &variables)
+double Operator::eval()
 {
     if(name_ == "+")
     {
-        return left_->eval(variables) + right_->eval(variables);
+        return left_->eval() + right_->eval();
     }
     else if(name_ == "-")
     {
-        return left_->eval(variables) - right_->eval(variables);
+        return left_->eval() - right_->eval();
     }
     else if(name_ == "*")
     {
-  		return left_->eval(variables) * right_->eval(variables);
+  		return left_->eval() * right_->eval();
     }
     else if(name_ == "/")
     {
-  		return left_->eval(variables) / right_->eval(variables);
+  		return left_->eval() / right_->eval();
     }
     else if(name_ == "^")
     {
-  		return pow(left_->eval(variables), right_->eval(variables));
+  		return pow(left_->eval(), right_->eval());
     }
 
 }

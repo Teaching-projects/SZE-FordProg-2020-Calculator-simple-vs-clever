@@ -14,7 +14,7 @@ class Constant: public Expression
   public:
 		Constant(double value);
 
-        virtual double eval(const map<string, double> &variables);
+        virtual double eval();
         virtual string to_string();
         virtual int precedence();
   private:
