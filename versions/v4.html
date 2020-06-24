@@ -19,7 +19,7 @@
                 
                 <div class="col">
                     <h1>Peter Koncz</h1>
-                    <h2>Simple vs Smart calculator</h2>
+                    <h2><a href="../index.html">Simple vs Smart calculator</a></h2>
                     <h3>Power function</h3>
                 </div>
 
@@ -33,7 +33,7 @@
         <div class="container">
             
             <h2>Simple solution</h2>
-            <p>The source code is available under <a href="../codes/v4/simple/">THIS LINK</a></p>
+            <p>The source code is available under <a href="https://github.com/Teaching-projects/SZE-FordProg-2020-Calculator-simple-vs-clever/tree/master/codes/v4/simple/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-maincpp-tab" data-toggle="tab" href="#nav-maincpp" role="tab" aria-controls="nav-maincpp" aria-selected="true">main.cpp</a>
@@ -507,16 +507,16 @@
         <div class="container">
             
             <h2>Smart solution</h2>
-            <p>The source code is available under <a href="../codes/v4/smart/">THIS LINK</a></p>
+            <p>The source code is available under <a href="https://github.com/Teaching-projects/SZE-FordProg-2020-Calculator-simple-vs-clever/tree/master/codes/v4/smart/">THIS LINK</a></p>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-szamoll-tab" data-toggle="tab" href="#nav-szamoll" role="tab" aria-controls="nav-szamoll" aria-selected="true">szamol.l</a>
-                    <a class="nav-item nav-link" id="nav-szamoly-tab" data-toggle="tab" href="#nav-szamoly" role="tab" aria-controls="nav-szamoly" aria-selected="false">szamol.y</a>
+                    <a class="nav-item nav-link active" id="nav-calcl-tab" data-toggle="tab" href="#nav-calcl" role="tab" aria-controls="nav-calcl" aria-selected="true">calc.l</a>
+                    <a class="nav-item nav-link" id="nav-calcy-tab" data-toggle="tab" href="#nav-calcy" role="tab" aria-controls="nav-calcy" aria-selected="false">calc.y</a>
                     <a class="nav-item nav-link" id="nav-MakefileBF-tab" data-toggle="tab" href="#nav-MakefileBF" role="tab" aria-controls="nav-MakefileBF" aria-selected="false">Makefile</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-szamoll" role="tabpanel" aria-labelledby="nav-szamoll-tab">
+                <div class="tab-pane fade show active" id="nav-calcl" role="tabpanel" aria-labelledby="nav-calcl-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
                         
     %{
@@ -525,7 +525,7 @@
     
     #define YY_DECL int yylex()
     
-    #include "szamol.tab.h"
+    #include "calc.tab.h"
     
     %}
     
@@ -550,7 +550,7 @@
     %%
                     </code></pre>
                 </div>
-                <div class="tab-pane fade" id="nav-szamoly" role="tabpanel" aria-labelledby="nav-szamoly-tab">
+                <div class="tab-pane fade" id="nav-calcy" role="tabpanel" aria-labelledby="nav-calcy-tab">
                     <pre  class="border border-2 border-dark p-2"><code>
     %{
 
@@ -627,7 +627,6 @@
                 | expression T_MINUS expression		{ $$ = $1 - $3; }
                 | expression T_MULTIPLY expression	{ $$ = $1 * $3; }
                 | expression T_POW expression			{ $$=pow($1,$3); }
-            //   | expression T_POW expression			{ printf("POWER\n"); }
                 
                 | T_LEFT expression T_RIGHT		{ $$ = $2; }
         ;
